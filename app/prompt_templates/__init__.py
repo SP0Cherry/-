@@ -1,0 +1,1 @@
+"""Class-scoped prompt templates: parsing, rendering, service and API."""

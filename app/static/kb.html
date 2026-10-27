@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>班级知识库 · CampusClaw</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body data-page="kb">
+  <header>
+    <div><strong>CampusClaw</strong> 教学知识库</div>
+    <nav>
+      <a href="/">材料列表</a>
+      <a href="/kb">知识库</a>
+      <span id="user-badge"></span>
+      <button id="logout-btn" type="button">退出</button>
+    </nav>
+  </header>
+  <main>
+    <div id="message" class="message"></div>
+
+    <div class="mode-switch" role="tablist">
+      <button type="button" id="mode-retrieve" class="mode-btn active">知识检索</button>
+      <button type="button" id="mode-ask" class="mode-btn">知识问答</button>
+    </div>
+
+    <form id="query-form">
+      <input id="query-input" type="text" maxlength="200"
+             placeholder="输入问题，例如：光合作用如何产生氧气？" autocomplete="off">
+      <button type="submit" id="submit-btn">检索</button>
+    </form>
+    <p class="hint" id="mode-hint">检索模式：仅返回本班资料中的相关片段与出处。</p>
+
+    <section id="skills-box" class="skills-box" hidden>
+      <h2>本次使用的技能</h2>
+      <p class="hint">可勾选多个本班已启用技能；只有问题命中技能适用条件时才会应用。</p>
+      <div id="skills-list" class="skill-list"></div>
+      <p id="skills-empty" class="hint" hidden>本班暂无已启用技能。</p>
+    </section>
+
+    <section id="template-box" class="skills-box" hidden>
+      <h2>本次使用的提示词模板</h2>
+      <p class="hint">
+        可选择本班一个已启用模板（默认不使用）；模板作为附加规程叠加，
+        不改变基础回答约束。
+      </p>
+      <div id="template-list" class="skill-list"></div>
+    </section>
+
+    <div id="tool-status" class="tool-status" hidden></div>
+    <section id="answer-box" class="answer-box" hidden></section>
+    <div id="gate-box" class="gate-box" hidden>
+      <p id="gate-text"></p>
+      <button type="button" id="gate-continue">仍要继续提问</button>
+      <button type="button" id="gate-cancel" class="secondary">取消</button>
+    </div>
+    <section id="sources-box" class="sources-box"></section>
+
+    <section id="skill-manage" class="mcp-section" hidden>
+      <h2>技能管理（教师）</h2>
+      <p class="hint">
+        上传 SKILL.md：元数据区支持「名称、适用条件、资料、工具、启用」，
+        元数据后空一行再写引导规程。工具可写 knowledge_search，
+        或使用「工具名@服务器名」引用本班已连接 MCP 服务器中已缓存的工具。
+      </p>
+      <form id="skill-form" class="skill-form">
+        <label>SKILL.md 文件
+          <input id="skill-file" type="file" accept=".md,.txt,text/markdown,text/plain" required>
+        </label>
+        <button type="submit">上传技能</button>
+      </form>
+      <table>
+        <thead>
+          <tr><th>名称</th><th>资料</th><th>适用条件</th><th>工具</th><th>状态</th><th></th></tr>
+        </thead>
+        <tbody id="skills-manage-body"></tbody>
+      </table>
+    </section>
+
+    <section id="template-manage" class="mcp-section" hidden>
+      <h2>模板管理（教师）</h2>
+      <p class="hint">
+        上传模板文件：元数据区支持「名称、描述、启用」，元数据后空一行再写模板正文。
+        正文可使用占位符 {{question}}、{{sources}}、{{skills}}。
+      </p>
+      <form id="template-form" class="skill-form">
+        <label>模板文件
+          <input id="template-file" type="file" accept=".md,.txt,text/markdown,text/plain" required>
+        </label>
+        <button type="submit">上传模板</button>
+      </form>
+      <table>
+        <thead>
+          <tr><th>名称</th><th>描述</th><th>占位符</th><th>状态</th><th></th></tr>
+        </thead>
+        <tbody id="templates-manage-body"></tbody>
+      </table>
+    </section>
+  </main>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/kb.js"></script>
+</body>
+</html>

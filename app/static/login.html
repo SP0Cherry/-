@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登录 · CampusClaw</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body data-page="login">
+  <main class="auth-card">
+    <h1>CampusClaw 登录</h1>
+    <div id="message" class="message"></div>
+    <form id="login-form">
+      <label for="username">用户名</label>
+      <input id="username" name="username" autocomplete="username" required>
+      <label for="password">密码</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit">登录</button>
+    </form>
+    <p class="muted">还没有账号？<a href="/register">自助注册</a></p>
+  </main>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/auth.js"></script>
+</body>
+</html>

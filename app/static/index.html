@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>教学材料 · CampusClaw</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body data-page="materials">
+  <header>
+    <div><strong>CampusClaw</strong> 教学知识库</div>
+    <nav>
+      <a href="/">材料列表</a>
+      <a href="/kb">知识库</a>
+      <span id="user-badge" class="muted"></span>
+      <button id="logout-btn" type="button">退出</button>
+    </nav>
+  </header>
+  <main>
+    <div id="message" class="message"></div>
+
+    <form id="upload-form" enctype="multipart/form-data" style="margin-bottom:20px; display:none">
+      <input type="file" id="file-input" name="file" required>
+      <button type="submit">上传材料</button>
+      <p id="format-hint" class="muted"></p>
+    </form>
+
+    <h1 id="class-title">教学材料</h1>
+    <table>
+      <thead>
+        <tr><th>文件名</th><th>类型</th><th>大小</th><th>上传者</th><th>上传时间</th><th></th></tr>
+      </thead>
+      <tbody id="materials-body"></tbody>
+    </table>
+
+    <section id="mcp-section" class="mcp-section" hidden>
+      <h2>MCP 服务器（教师）</h2>
+      <p class="hint">
+        登记本班 MCP 服务器后点击「连接」，系统会完成握手并缓存工具清单。
+        Bearer 令牌只保存在 CampusClaw 服务端，不会出现在页面或接口响应中；
+        留空则使用服务端已配置的令牌（适用于 <code>http://mcp-demo:8090</code>）。
+      </p>
+      <form id="mcp-form" class="mcp-form">
+        <label>名称
+          <input id="mcp-name" type="text" maxlength="50" required
+                 placeholder="例如：课程公式助手">
+        </label>
+        <label>Base URL
+          <input id="mcp-base-url" type="text" maxlength="255" required
+                 placeholder="http://mcp-demo:8090">
+        </label>
+        <label>Bearer 令牌（可选，仅写入不回显）
+          <input id="mcp-token" type="password" maxlength="255"
+                 autocomplete="new-password" placeholder="留空则使用服务端配置">
+        </label>
+        <button type="submit">登记服务器</button>
+      </form>
+      <table>
+        <thead>
+          <tr><th>名称</th><th>Base URL</th><th>状态</th><th>工具</th><th></th></tr>
+        </thead>
+        <tbody id="mcp-servers-body"></tbody>
+      </table>
+
+      <div class="audit-head">
+        <h3>MCP 工具调用审计</h3>
+        <button id="audit-refresh-btn" type="button" class="linkish">刷新</button>
+      </div>
+      <p class="hint">仅显示本班记录，按时间倒序；不包含令牌、调用参数与工具返回内容。</p>
+      <table>
+        <thead>
+          <tr><th>时间</th><th>用户</th><th>工具@服务器</th><th>状态</th><th>原因</th></tr>
+        </thead>
+        <tbody id="audit-body"></tbody>
+      </table>
+      <button id="audit-more-btn" type="button" class="linkish" hidden>加载更多</button>
+    </section>
+  </main>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/materials.js"></script>
+</body>
+</html>
