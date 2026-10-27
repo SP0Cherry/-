@@ -1,0 +1,67 @@
+services:
+  web:
+    build: .
+    image: campusclaw:latest
+    # 网络要求：容器需经 HTTPS 出站访问 EMBEDDING_BASE_URL 主机
+    # （默认 https://ai-gateway.devops.hello1023.com）以调用嵌入与问答接口；
+    # EMBEDDING_BACKEND=stub 时无需任何出站访问。
+    ports:
+      - "8000:8000"
+    env_file:
+      # Create this from .env.example; it must contain a real SECRET_KEY.
+      - .env
+    environment:
+      FLASK_ENV: production
+      DATABASE_URL: sqlite:////data/campusclaw.db
+      UPLOAD_ROOT: /data/uploads
+      # Host-side MCP client reaches the self-hosted server by Compose DNS.
+      # MCP_AUTH_TOKEN comes from the uncommitted .env via env_file.
+      MCP_BASE_URL: http://mcp-demo:8090
+    volumes:
+      - campusclaw-data:/data
+    depends_on:
+      mcp-demo:
+        condition: service_healthy
+    networks:
+      - campusclaw
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import os,urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3); print('healthy')"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  # Self-hosted MCP server: same repo, same Compose network, built alongside
+  # the API. The bearer token is injected at runtime from the uncommitted .env
+  # (Compose interpolation), so it never enters Git or the image.
+  mcp-demo:
+    build: ./mcp-server
+    image: campusclaw-mcp:latest
+    environment:
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:?MCP_AUTH_TOKEN must be set in .env}
+    ports:
+      - "8090:8090"
+    networks:
+      - campusclaw
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8090/health', timeout=3); print('healthy')"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  campusclaw-data:
+
+networks:
+  campusclaw:
